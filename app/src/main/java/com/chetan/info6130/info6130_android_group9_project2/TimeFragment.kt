@@ -1,18 +1,15 @@
 package com.chetan.info6130.info6130_android_group9_project2
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+import androidx.fragment.app.Fragment
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 /**
  * A simple [Fragment] subclass.
@@ -20,18 +17,21 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class TimeFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+
     private lateinit var view: View
     private lateinit var timeTextView: TextView
+    private lateinit var currentTime: String
+
+    private var handler: Handler? = null
+    private var runnable: Runnable? = null
+
+    private fun updateTextView() {
+        val currentTime = ARG_CURRENT_TIME
+        timeTextView.text = currentTime
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
     }
 
     override fun onCreateView(
@@ -44,7 +44,27 @@ class TimeFragment : Fragment() {
         val currentTime = arguments?.getString(ARG_CURRENT_TIME)
         timeTextView = view.findViewById(R.id.timeTextView)
         timeTextView.text = currentTime
+
+        handler = Handler()
+        startUpdatingTime()
+
         return view
+    }
+
+    private fun startUpdatingTime() {
+        runnable = object : Runnable {
+            override fun run() {
+                updateTime()
+                handler?.postDelayed(this, 1000) // Update every 1 second
+            }
+        }
+        handler?.post(runnable as Runnable)
+    }
+
+    private fun updateTime() {
+        val sdf = SimpleDateFormat("hh:mm:ss a", Locale.getDefault())
+        val currentTime = sdf.format(Date())
+        timeTextView.text = currentTime
     }
 
     companion object {
@@ -67,3 +87,4 @@ class TimeFragment : Fragment() {
         private const val ARG_CURRENT_TIME = "arg_current_time"
     }
 }
+
