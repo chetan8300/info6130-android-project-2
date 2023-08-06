@@ -14,6 +14,9 @@ import android.graphics.Color
 import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
+import java.text.DateFormat
+import java.util.Date
+
 class NameFragment : Fragment() {
 
     private lateinit var view: View
@@ -27,17 +30,24 @@ class NameFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         view = inflater.inflate(R.layout.fragment_name, container, false)
+
+
         cloudImage = view.findViewById(R.id.cloudImage)
         sunImage = view.findViewById(R.id.sunImage)
         birdsImage = view.findViewById(R.id.birdsImage)
         val startButton = view.findViewById<Button>(R.id.startButton)
         val stopButton = view.findViewById<Button>(R.id.stopButton)
+        val currentTime = getCurrentTime()
+
+        passCurrentTime(currentTime)
 
         // Apply the initial animation
         colorAnimator = animateBackgroundColor()
 
         startButton.setOnClickListener {
             startAnimations()
+//            val currentTime = getCurrentTime()
+//            Log.d("NameFragment", "Current time: $currentTime")
         }
 
         stopButton.setOnClickListener {
@@ -124,4 +134,16 @@ class NameFragment : Fragment() {
 
         return translateAnimator
     }
+
+    private fun getCurrentTime(): String {
+        val currentTime = Date()
+        val dateFormat: DateFormat = DateFormat.getTimeInstance(DateFormat.LONG)
+        return dateFormat.format(currentTime)
+    }
+
+    private fun passCurrentTime(currentTime: String) {
+        val timeFragment = TimeFragment.newInstance(currentTime)
+        parentFragmentManager.beginTransaction().replace(R.id.timeFrameLayout, timeFragment).commit()
+    }
+
 }
