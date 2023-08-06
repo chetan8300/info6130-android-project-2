@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Info6130AndroidGroup9Project2</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="group_name">Group 9</string>
+    <string name="cloud_image">Cloud Image</string>
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
+    <string name="sun_image">Sun Image</string>
+    <string name="birds_image">Birds Image</string>
 </resources>

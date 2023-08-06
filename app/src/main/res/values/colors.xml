@@ -2,4 +2,15 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="my_light_primary">#4e32bc</color>
+    <color name="purple_200">#845ef0</color>
+    <color name="purple_500">#4e32bc</color>
+    <color name="purple_700">#00048b</color>
+    <color name="teal_200">#5BE6D9</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="orange_red">#FF4500</color>
+    <color name="sea_green">#8FBC8F</color>
+    <color name="yellow">#FFFF00</color>
+    <color name="top_background_color_1">#4ba4d6</color>
+    <color name="top_background_color_2">#4C7CF5</color>
 </resources>
