@@ -29,4 +29,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/timeTextView"
         android:contentDescription="Wheel Image" />
+
+    <ImageView
+        android:id="@+id/seasonImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="127dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/spring"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/wheelImage"
+        android:scaleType="fitXY"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>

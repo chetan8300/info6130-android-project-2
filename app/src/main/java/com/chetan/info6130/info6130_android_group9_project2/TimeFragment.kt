@@ -3,6 +3,7 @@ package com.chetan.info6130.info6130_android_group9_project2
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.media.Image
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -29,12 +30,14 @@ class TimeFragment : Fragment() {
 
     private lateinit var view: View
     private lateinit var wheelImage: ImageView
+    private lateinit var seasonImage: ImageView
     private lateinit var timeTextView: TextView
     private lateinit var currentTime: String
     private var wheelAnimation: Animation? = null
     private var wheelAnimationStarted = false
     private lateinit var animRotate: Animation
-
+    private var season = Season.SPRING
+    private var mediaPlayer: MediaPlayer? = null
     private var handler: Handler? = null
     private var runnable: Runnable? = null
 
@@ -56,6 +59,7 @@ class TimeFragment : Fragment() {
 
         animRotate = AnimationUtils.loadAnimation(requireContext(), R.anim.rotate)
         wheelImage = view.findViewById(R.id.wheelImage)
+        seasonImage= view.findViewById(R.id.seasonImageView)
 
         val currentTime = arguments?.getString(ARG_SEASON)
         timeTextView = view.findViewById(R.id.timeTextView)
@@ -64,10 +68,84 @@ class TimeFragment : Fragment() {
         handler = Handler()
         startUpdatingTime()
         startWheelAnimation()
+        startSeasonalChanges()
 
         return view
     }
 
+    private fun startSeasonalChanges() {
+        val timer = Timer(15000, object : Timer.TimerListener {
+            override fun onTick() {
+                // Change the season and update background and other elements
+                when (season) {
+                    Season.SPRING -> {
+                        view.setBackgroundResource(R.color.orange_red)
+                        seasonImage.setImageResource(R.drawable.spring)
+                        playMusic(R.raw.spring_song)
+                        season = Season.SUMMER
+                    }
+                    Season.SUMMER -> {
+                        view.setBackgroundResource(R.color.dark_sea_green)
+                        seasonImage.setImageResource(R.drawable.summer)
+                        playMusic(R.raw.summer_song)
+                        season = Season.AUTUMN
+                    }
+                    Season.AUTUMN -> {
+                        view.setBackgroundResource(R.color.yellow)
+                        seasonImage.setImageResource(R.drawable.autumn)
+                        playMusic(R.raw.autumn_song)
+                        season = Season.WINTER
+                    }
+                    Season.WINTER -> {
+                        view.setBackgroundResource(R.color.white)
+                        seasonImage.setImageResource(R.drawable.winter)
+                        playMusic(R.raw.winter_song)
+                        season = Season.SPRING
+                    }
+                }
+            }
+        })
+        timer.start()
+    }
+
+    private fun playMusic(musicFile: Int) {
+
+    }
+
+
+
+    private enum class Season {
+        SPRING, SUMMER, AUTUMN, WINTER
+    }
+
+    class Timer(private val intervalMillis: Long, private val listener: TimerListener) {
+
+        private val handler = Handler()
+        private var runnable: Runnable? = null
+
+        fun start() {
+            runnable = object : Runnable {
+                override fun run() {
+                    listener.onTick()
+                    handler.postDelayed(this, intervalMillis)
+                }
+            }
+            handler.post(runnable!!)
+        }
+
+        fun stop() {
+            handler.removeCallbacks(runnable!!)
+        }
+
+        interface TimerListener {
+            fun onTick()
+        }
+    }
+
+    private fun getFormattedTime(): String {
+        val sdf = SimpleDateFormat("hh:mm:ss a", Locale.getDefault())
+        return sdf.format(Date())
+    }
 
     private fun startUpdatingTime() {
         runnable = object : Runnable {
