@@ -109,11 +109,40 @@ class TimeFragment : Fragment() {
     }
 
     private fun playMusic(musicFile: Int) {
+        stopMusic()
+        try {
+            mediaPlayer = MediaPlayer.create(requireContext(), musicFile)
+            mediaPlayer?.setOnCompletionListener {
 
+                stopMusic()
+            }
+
+            val leftVolume = 1.0f
+            val rightVolume = 1.0f
+            mediaPlayer?.setVolume(leftVolume, rightVolume)
+
+            mediaPlayer?.start()
+            Log.d("Jash", "Music Playing")
+        } catch (e: Exception) {
+            // Handle any exceptions that might occur during media player operations
+            e.printStackTrace()
+        }
     }
 
-
-
+    private fun stopMusic() {
+        mediaPlayer?.let {
+            try {
+                if (it.isPlaying) {
+                    it.stop()
+                }
+                it.release()
+            } catch (e: Exception) {
+                // Handle any exceptions that might occur during media player operations
+                e.printStackTrace()
+            }
+            mediaPlayer = null
+        }
+    }
     private enum class Season {
         SPRING, SUMMER, AUTUMN, WINTER
     }
