@@ -38,6 +38,7 @@ class TimeFragment : Fragment() {
     private lateinit var animRotate: Animation
     private var season = Season.SPRING
     private var mediaPlayer: MediaPlayer? = null
+    private val musicDuration = 15000L // 15 seconds
     private var handler: Handler? = null
     private var runnable: Runnable? = null
 
@@ -83,24 +84,28 @@ class TimeFragment : Fragment() {
                         seasonImage.setImageResource(R.drawable.spring)
                         playMusic(R.raw.spring_song)
                         season = Season.SUMMER
+//                        playMusic()
                     }
                     Season.SUMMER -> {
                         view.setBackgroundResource(R.color.dark_sea_green)
                         seasonImage.setImageResource(R.drawable.summer)
                         playMusic(R.raw.summer_song)
                         season = Season.AUTUMN
+//                        playMusic()
                     }
                     Season.AUTUMN -> {
                         view.setBackgroundResource(R.color.yellow)
                         seasonImage.setImageResource(R.drawable.autumn)
                         playMusic(R.raw.autumn_song)
                         season = Season.WINTER
+//                        playMusic()
                     }
                     Season.WINTER -> {
                         view.setBackgroundResource(R.color.white)
                         seasonImage.setImageResource(R.drawable.winter)
                         playMusic(R.raw.winter_song)
                         season = Season.SPRING
+//                        playMusic()
                     }
                 }
             }
@@ -108,21 +113,34 @@ class TimeFragment : Fragment() {
         timer.start()
     }
 
+
+//    fun playMusic(){
+//        mediaPlayer = MediaPlayer.create(this, R.raw.summer_song)
+//
+//        if(!mediaPlayer?. isPlaying!!) {
+//            mediaPlayer?.start()
+//        }
+//    }
     private fun playMusic(musicFile: Int) {
         stopMusic()
+
         try {
             mediaPlayer = MediaPlayer.create(requireContext(), musicFile)
             mediaPlayer?.setOnCompletionListener {
-
                 stopMusic()
             }
 
-            val leftVolume = 1.0f
-            val rightVolume = 1.0f
+            // Adjust the volume settings (0.0f to 1.0f)
+            val leftVolume = 2.0f
+            val rightVolume = 2.0f
             mediaPlayer?.setVolume(leftVolume, rightVolume)
 
             mediaPlayer?.start()
-            Log.d("Jash", "Music Playing")
+
+            // Schedule stopping the music after the desired duration
+            handler?.postDelayed({
+                stopMusic()
+            }, musicDuration)
         } catch (e: Exception) {
             // Handle any exceptions that might occur during media player operations
             e.printStackTrace()
