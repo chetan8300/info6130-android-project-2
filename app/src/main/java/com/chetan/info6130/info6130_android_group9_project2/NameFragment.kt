@@ -22,7 +22,7 @@ import android.widget.ImageView
 import java.text.DateFormat
 import java.util.Date
 
-class NameFragment : Fragment(), AnimationListener {
+class NameFragment : Fragment() {
 
     private lateinit var view: View
     private lateinit var cloudImage: ImageView
@@ -69,8 +69,6 @@ class NameFragment : Fragment(), AnimationListener {
 
         startButton.setOnClickListener {
             startAnimations()
-
-            animationListener.onStartButtonClicked()
         }
 
         stopButton.setOnClickListener {
@@ -90,16 +88,13 @@ class NameFragment : Fragment(), AnimationListener {
         birdsAnimator = initTranslateAnimator(birdsImage, birdsWidth, 3500, birdsSequential)
         return view
     }
-    override fun onStartButtonClicked() {
-        animationListener.onStartButtonClicked()
-    }
 
     private fun startAnimations() {
         colorAnimator.start()
         cloudAnimator.start()
         sunAnimator.start()
         birdsAnimator.start()
-
+        animationListener.onStartButtonClicked()
     }
 
     private fun stopAnimations() {
@@ -107,6 +102,7 @@ class NameFragment : Fragment(), AnimationListener {
         cloudAnimator.cancel()
         sunAnimator.cancel()
         birdsAnimator.cancel()
+        animationListener.onStopButtonClick()
     }
 
     @SuppressLint("ResourceType")

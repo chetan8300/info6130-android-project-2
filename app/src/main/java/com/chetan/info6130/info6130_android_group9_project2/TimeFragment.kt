@@ -1,8 +1,6 @@
 package com.chetan.info6130.info6130_android_group9_project2
 
-import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
-import android.media.Image
+import android.content.Context
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
@@ -12,8 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import android.view.animation.LinearInterpolator
-import android.view.animation.RotateAnimation
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -32,9 +28,6 @@ class TimeFragment : Fragment() {
     private lateinit var wheelImage: ImageView
     private lateinit var seasonImage: ImageView
     private lateinit var timeTextView: TextView
-    private lateinit var currentTime: String
-    private var wheelAnimation: Animation? = null
-    private var wheelAnimationStarted = false
     private lateinit var animRotate: Animation
     private var season = Season.SPRING
     private var mediaPlayer: MediaPlayer? = null
@@ -42,23 +35,13 @@ class TimeFragment : Fragment() {
     private var handler: Handler? = null
     private var runnable: Runnable? = null
 
-    private fun updateTextView() {
-        val currentTime = ARG_SEASON
-        timeTextView.text = currentTime
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_time, container, false)
 
-        animRotate = AnimationUtils.loadAnimation(requireContext(), R.anim.rotate)
         wheelImage = view.findViewById(R.id.wheelImage)
         seasonImage= view.findViewById(R.id.seasonImageView)
 
@@ -68,7 +51,6 @@ class TimeFragment : Fragment() {
 
         handler = Handler()
         startUpdatingTime()
-        startWheelAnimation()
         startSeasonalChanges()
 
         return view
@@ -210,56 +192,31 @@ class TimeFragment : Fragment() {
         timeTextView.text = currentTime
     }
 
-//    fun startWheelAnimation(){
-//        if(!::wheelImage.isInitialized){
-//            return
-//        }
-//        wheelAnimation = RotateAnimation(
-//            0f, 360f,
-//            Animation.RELATIVE_TO_SELF, 0.5f,
-//            Animation.RELATIVE_TO_SELF, 0.5f
-//        ).apply {
-//            duration = 1000 // Set the animation duration (in milliseconds)
-//            repeatCount = Animation.INFINITE // Repeat the animation infinitely
-//            interpolator = LinearInterpolator() // Use a linear interpolator for smooth rotation
-//        }
-//        // Start the animation
-////        wheelImage.startAnimation(wheelAnimation)
-//        wheelAnimation?.start()
-//    }
-
-    fun startWheelAnimation(){
-//        if (isAdded && ::wheelImage.isInitialized) {
-//            wheelAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.rotate)
-//            wheelImage.startAnimation(wheelAnimation)
-//            wheelAnimationStarted = true
-//        }
-//        if (::wheelImage.isInitialized) {
-//            val rotateAnimation = RotateAnimation(
-//                0f, 360f,
-//                Animation.RELATIVE_TO_SELF, 0.5f,
-//                Animation.RELATIVE_TO_SELF, 0.5f
-//            ).apply {
-//                duration = 1000 // Set the animation duration (in milliseconds)
-//                repeatCount = Animation.INFINITE // Repeat the animation infinitely
-//                interpolator = LinearInterpolator() // Use a linear interpolator for smooth rotation
-//            }
-//            Log.d("milit", "Animation started")
-//            wheelImage.startAnimation(rotateAnimation)
-//        }
-
-//        if (::wheelImage.isInitialized) {
-//            wheelImage.animate()
-//                .rotationBy(360f)
-//                .setDuration(1000)
-//                .setInterpolator(LinearInterpolator())
-//                .withEndAction { startWheelAnimation() }
-//            Log.d("milit", "Animation started")
-//        }
-        wheelImage.startAnimation(animRotate)
-        Log.d("milit", "Animation started")
+    private fun startWheelAnimation(context: Context) {
+        wheelImage = view.findViewById(R.id.wheelImage)
+        if (isAdded && ::wheelImage.isInitialized) {
+            animRotate = AnimationUtils.loadAnimation(context, R.anim.rotate)
+            wheelImage.startAnimation(animRotate)
+            Log.d("wheelImage", "Animation started")
+        } else {
+            Log.d("wheelImage", "Fragment not attached or wheelImage not initialized")
+            Log.d("isAdded", isAdded.toString())
+            Log.d("wheelImage.isInitialized", ::wheelImage.isInitialized.toString())
+        }
     }
 
+    fun startAnimations(context: Context) {
+        startWheelAnimation(context)
+    }
+
+    fun stopAnimations() {
+        if (::animRotate.isInitialized) {
+            wheelImage.clearAnimation()
+            Log.d("wheelImage", "Wheel animation stopped")
+        } else {
+            Log.d("wheelImage", "Wheel animation not initialized")
+        }
+    }
 
     companion object {
         /**

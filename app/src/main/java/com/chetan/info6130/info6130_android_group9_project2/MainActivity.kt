@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 
 interface AnimationListener {
     fun onStartButtonClicked()
+    fun onStopButtonClick()
 //    fun startWheelAnimation()
 }
 class MainActivity : AppCompatActivity(), AnimationListener {
@@ -30,10 +31,12 @@ class MainActivity : AppCompatActivity(), AnimationListener {
     }
 
     override fun onStartButtonClicked() {
-        timeFragment.startWheelAnimation()
+        val timeFragment = supportFragmentManager.findFragmentById(R.id.timeFrameLayout) as? TimeFragment
+        timeFragment?.startAnimations(this)
     }
-//    override fun startWheelAnimation() {
-//        val timeFragment = supportFragmentManager.findFragmentById(R.id.timeFrameLayout) as TimeFragment?
-//        timeFragment?.startWheelAnimation()
-//    }
+
+    override fun onStopButtonClick() {
+        val timeFragment = supportFragmentManager.findFragmentById(R.id.timeFrameLayout) as? TimeFragment
+        timeFragment?.stopAnimations()
+    }
 }
