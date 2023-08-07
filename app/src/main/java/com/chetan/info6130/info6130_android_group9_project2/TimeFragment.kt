@@ -34,6 +34,7 @@ class TimeFragment : Fragment() {
     private val musicDuration = 15000L // 15 seconds
     private var handler: Handler? = null
     private var runnable: Runnable? = null
+    var timer:Timer? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,13 +52,13 @@ class TimeFragment : Fragment() {
 
         handler = Handler()
         startUpdatingTime()
-        startSeasonalChanges()
+
 
         return view
     }
 
     private fun startSeasonalChanges() {
-        val timer = Timer(15000, object : Timer.TimerListener {
+        timer = Timer(15000, object : Timer.TimerListener {
             override fun onTick() {
                 // Change the season and update background and other elements
                 when (season) {
@@ -66,43 +67,35 @@ class TimeFragment : Fragment() {
                         seasonImage.setImageResource(R.drawable.spring)
                         playMusic(R.raw.spring_song)
                         season = Season.SUMMER
-//                        playMusic()
+
                     }
                     Season.SUMMER -> {
                         view.setBackgroundResource(R.color.dark_sea_green)
                         seasonImage.setImageResource(R.drawable.summer)
                         playMusic(R.raw.summer_song)
                         season = Season.AUTUMN
-//                        playMusic()
+
                     }
                     Season.AUTUMN -> {
                         view.setBackgroundResource(R.color.yellow)
                         seasonImage.setImageResource(R.drawable.autumn)
                         playMusic(R.raw.autumn_song)
                         season = Season.WINTER
-//                        playMusic()
+
                     }
                     Season.WINTER -> {
                         view.setBackgroundResource(R.color.white)
                         seasonImage.setImageResource(R.drawable.winter)
                         playMusic(R.raw.winter_song)
                         season = Season.SPRING
-//                        playMusic()
+
                     }
                 }
             }
         })
-        timer.start()
+        timer!!.start()
     }
 
-
-//    fun playMusic(){
-//        mediaPlayer = MediaPlayer.create(this, R.raw.summer_song)
-//
-//        if(!mediaPlayer?. isPlaying!!) {
-//            mediaPlayer?.start()
-//        }
-//    }
     private fun playMusic(musicFile: Int) {
         stopMusic()
 
@@ -207,15 +200,24 @@ class TimeFragment : Fragment() {
 
     fun startAnimations(context: Context) {
         startWheelAnimation(context)
+        startSeasonalChanges()
     }
 
     fun stopAnimations() {
         if (::animRotate.isInitialized) {
             wheelImage.clearAnimation()
+            stopMusic()
+            timer?.stop()
             Log.d("wheelImage", "Wheel animation stopped")
         } else {
             Log.d("wheelImage", "Wheel animation not initialized")
         }
+    }
+
+    fun resetSeasonToSpring(context: Context) {
+        season = Season.SPRING
+        view?.setBackgroundResource(R.color.orange_red)
+        seasonImage?.setImageResource(R.drawable.spring)
     }
 
     companion object {

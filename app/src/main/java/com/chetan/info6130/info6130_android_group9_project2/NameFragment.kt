@@ -36,9 +36,6 @@ class NameFragment : Fragment() {
     private val handler = Handler(Looper.getMainLooper())
     private lateinit var timeFragment: TimeFragment
 
-//    interface AnimationListener {
-//        fun onStartButtonClicked()
-//    }
 
     private lateinit var animationListener: AnimationListener
     override fun onAttach(context: Context) {
@@ -56,7 +53,6 @@ class NameFragment : Fragment() {
         cloudImage = view.findViewById(R.id.cloudImage)
         sunImage = view.findViewById(R.id.sunImage)
         birdsImage = view.findViewById(R.id.birdsImage)
-//        wheelImage = view.findViewById(R.id.wheelImage)
 
         val startButton = view.findViewById<Button>(R.id.startButton)
         val stopButton = view.findViewById<Button>(R.id.stopButton)
