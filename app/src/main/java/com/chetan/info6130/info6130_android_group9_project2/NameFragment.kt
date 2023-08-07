@@ -10,14 +10,19 @@ import android.animation.ArgbEvaluator
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.Color
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.ImageView
 import java.text.DateFormat
 import java.util.Date
 
-class NameFragment : Fragment() {
+class NameFragment : Fragment(), AnimationListener {
 
     private lateinit var view: View
     private lateinit var cloudImage: ImageView
@@ -27,7 +32,23 @@ class NameFragment : Fragment() {
     private lateinit var cloudAnimator: AnimatorSet
     private lateinit var sunAnimator: AnimatorSet
     private lateinit var birdsAnimator: AnimatorSet
+    private lateinit var animRotate: Animation
+    private val handler = Handler(Looper.getMainLooper())
+    private lateinit var timeFragment: TimeFragment
 
+//    interface AnimationListener {
+//        fun onStartButtonClicked()
+//    }
+
+    private lateinit var animationListener: AnimationListener
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is AnimationListener) {
+            animationListener = context
+        } else {
+            throw RuntimeException("$context must implement AnimationListener")
+        }
+    }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         view = inflater.inflate(R.layout.fragment_name, container, false)
 
@@ -35,6 +56,8 @@ class NameFragment : Fragment() {
         cloudImage = view.findViewById(R.id.cloudImage)
         sunImage = view.findViewById(R.id.sunImage)
         birdsImage = view.findViewById(R.id.birdsImage)
+//        wheelImage = view.findViewById(R.id.wheelImage)
+
         val startButton = view.findViewById<Button>(R.id.startButton)
         val stopButton = view.findViewById<Button>(R.id.stopButton)
         val currentTime = getCurrentTime()
@@ -46,8 +69,8 @@ class NameFragment : Fragment() {
 
         startButton.setOnClickListener {
             startAnimations()
-//            val currentTime = getCurrentTime()
-//            Log.d("NameFragment", "Current time: $currentTime")
+
+            animationListener.onStartButtonClicked()
         }
 
         stopButton.setOnClickListener {
@@ -65,8 +88,10 @@ class NameFragment : Fragment() {
         val birdsWidth = resources.displayMetrics.density * 180
         val birdsSequential = false
         birdsAnimator = initTranslateAnimator(birdsImage, birdsWidth, 3500, birdsSequential)
-
         return view
+    }
+    override fun onStartButtonClicked() {
+        animationListener.onStartButtonClicked()
     }
 
     private fun startAnimations() {
@@ -74,6 +99,7 @@ class NameFragment : Fragment() {
         cloudAnimator.start()
         sunAnimator.start()
         birdsAnimator.start()
+
     }
 
     private fun stopAnimations() {
@@ -141,8 +167,8 @@ class NameFragment : Fragment() {
         return dateFormat.format(currentTime)
     }
 
-    private fun passCurrentTime(currentTime: String) {
-        val timeFragment = TimeFragment.newInstance(currentTime)
+    private fun passCurrentTime(season: String) {
+        val timeFragment = TimeFragment.newInstance(season)
         parentFragmentManager.beginTransaction().replace(R.id.timeFrameLayout, timeFragment).commit()
     }
 

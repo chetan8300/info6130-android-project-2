@@ -9,7 +9,12 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 
-class MainActivity : AppCompatActivity() {
+interface AnimationListener {
+    fun onStartButtonClicked()
+//    fun startWheelAnimation()
+}
+class MainActivity : AppCompatActivity(), AnimationListener {
+
     private lateinit var nameFragment: NameFragment
     private lateinit var timeFragment: TimeFragment
 
@@ -23,4 +28,12 @@ class MainActivity : AppCompatActivity() {
         timeFragment = TimeFragment()
         supportFragmentManager.beginTransaction().replace(R.id.timeFrameLayout, timeFragment).commit()
     }
+
+    override fun onStartButtonClicked() {
+        timeFragment.startWheelAnimation()
+    }
+//    override fun startWheelAnimation() {
+//        val timeFragment = supportFragmentManager.findFragmentById(R.id.timeFrameLayout) as TimeFragment?
+//        timeFragment?.startWheelAnimation()
+//    }
 }

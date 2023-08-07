@@ -1,10 +1,19 @@
 package com.chetan.info6130.info6130_android_group9_project2
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
+import android.media.Image
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
+import android.view.animation.LinearInterpolator
+import android.view.animation.RotateAnimation
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import java.text.SimpleDateFormat
@@ -19,14 +28,18 @@ import java.util.Locale
 class TimeFragment : Fragment() {
 
     private lateinit var view: View
+    private lateinit var wheelImage: ImageView
     private lateinit var timeTextView: TextView
     private lateinit var currentTime: String
+    private var wheelAnimation: Animation? = null
+    private var wheelAnimationStarted = false
+    private lateinit var animRotate: Animation
 
     private var handler: Handler? = null
     private var runnable: Runnable? = null
 
     private fun updateTextView() {
-        val currentTime = ARG_CURRENT_TIME
+        val currentTime = ARG_SEASON
         timeTextView.text = currentTime
     }
 
@@ -41,15 +54,20 @@ class TimeFragment : Fragment() {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_time, container, false)
 
-        val currentTime = arguments?.getString(ARG_CURRENT_TIME)
+        animRotate = AnimationUtils.loadAnimation(requireContext(), R.anim.rotate)
+        wheelImage = view.findViewById(R.id.wheelImage)
+
+        val currentTime = arguments?.getString(ARG_SEASON)
         timeTextView = view.findViewById(R.id.timeTextView)
         timeTextView.text = currentTime
 
         handler = Handler()
         startUpdatingTime()
+        startWheelAnimation()
 
         return view
     }
+
 
     private fun startUpdatingTime() {
         runnable = object : Runnable {
@@ -67,6 +85,57 @@ class TimeFragment : Fragment() {
         timeTextView.text = currentTime
     }
 
+//    fun startWheelAnimation(){
+//        if(!::wheelImage.isInitialized){
+//            return
+//        }
+//        wheelAnimation = RotateAnimation(
+//            0f, 360f,
+//            Animation.RELATIVE_TO_SELF, 0.5f,
+//            Animation.RELATIVE_TO_SELF, 0.5f
+//        ).apply {
+//            duration = 1000 // Set the animation duration (in milliseconds)
+//            repeatCount = Animation.INFINITE // Repeat the animation infinitely
+//            interpolator = LinearInterpolator() // Use a linear interpolator for smooth rotation
+//        }
+//        // Start the animation
+////        wheelImage.startAnimation(wheelAnimation)
+//        wheelAnimation?.start()
+//    }
+
+    fun startWheelAnimation(){
+//        if (isAdded && ::wheelImage.isInitialized) {
+//            wheelAnimation = AnimationUtils.loadAnimation(requireContext(), R.anim.rotate)
+//            wheelImage.startAnimation(wheelAnimation)
+//            wheelAnimationStarted = true
+//        }
+//        if (::wheelImage.isInitialized) {
+//            val rotateAnimation = RotateAnimation(
+//                0f, 360f,
+//                Animation.RELATIVE_TO_SELF, 0.5f,
+//                Animation.RELATIVE_TO_SELF, 0.5f
+//            ).apply {
+//                duration = 1000 // Set the animation duration (in milliseconds)
+//                repeatCount = Animation.INFINITE // Repeat the animation infinitely
+//                interpolator = LinearInterpolator() // Use a linear interpolator for smooth rotation
+//            }
+//            Log.d("milit", "Animation started")
+//            wheelImage.startAnimation(rotateAnimation)
+//        }
+
+//        if (::wheelImage.isInitialized) {
+//            wheelImage.animate()
+//                .rotationBy(360f)
+//                .setDuration(1000)
+//                .setInterpolator(LinearInterpolator())
+//                .withEndAction { startWheelAnimation() }
+//            Log.d("milit", "Animation started")
+//        }
+        wheelImage.startAnimation(animRotate)
+        Log.d("milit", "Animation started")
+    }
+
+
     companion object {
         /**
          * Use this factory method to create a new instance of
@@ -78,13 +147,13 @@ class TimeFragment : Fragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(currentTime: String) =
+        fun newInstance(season: String) =
             TimeFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_CURRENT_TIME, currentTime)
+                    putString(ARG_SEASON, season)
                 }
             }
-        private const val ARG_CURRENT_TIME = "arg_current_time"
+        private const val ARG_SEASON = "arg_season"
     }
 }
 

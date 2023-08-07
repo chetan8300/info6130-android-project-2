@@ -17,4 +17,16 @@
         android:text="TextView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/wheelImage"
+        android:layout_width="148dp"
+        android:layout_height="127dp"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/wheel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/timeTextView"
+        android:contentDescription="Wheel Image" />
 </androidx.constraintlayout.widget.ConstraintLayout>
